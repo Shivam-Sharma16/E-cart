@@ -2,14 +2,17 @@ import React from 'react'
 import {useForm} from "react-hook-form"
 import {nanoid} from 'nanoid'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { asyncLoginUser } from '../store/actions/userAction'
 
 const Login = () => {
 const {register,handleSubmit,reset}=useForm()
 
-
+const dispatch=useDispatch()
 const loginHandler=(user)=>{
 user.id=nanoid()
-console.log(user);
+dispatch(asyncLoginUser(user))
+
 reset()
 
 }
@@ -19,7 +22,7 @@ reset()
         <div className='flex flex-col justify-center items-center relative'>
             <i className="text-6xl border-[#00264D] rounded-[50%] p-[1rem] bg-[#00264D] text-white absolute top-[20%]
             ri-user-fill"></i>
-            <form onClick={handleSubmit(loginHandler)} className='h-[50vh] flex flex-col rounded-2xl items-center justify-center gap-[1rem] bg-white/40 w-fit mt-[10rem] p-[2rem]' >
+            <form onSubmit={handleSubmit(loginHandler)} className='h-[50vh] flex flex-col rounded-2xl items-center justify-center gap-[1rem] bg-white/40 w-fit mt-[10rem] p-[2rem]' >
                 <div><i className="bg-[#00264D] text-4xl text-white outline-0 font-thin px-[0.5rem] py-[0.5rem]
                  ri-user-fill"></i>
                 <input className='bg-[#385273] text-3xl text-white outline-0 font-thin px-[1rem] py-[0.5rem]'
