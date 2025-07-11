@@ -1,23 +1,48 @@
-import React, { useEffect } from 'react'
-import Mainroutes from './routes/Mainroutes'
-import Navbar from './components/Navbar'
-import { useDispatch } from 'react-redux'
-import { asyncCurrentUser } from './store/actions/userAction'
+import React, { useEffect, useRef } from 'react';
+import Mainroutes from './routes/Mainroutes';
+import Navbar from './components/Navbar';
+import { useDispatch } from 'react-redux';
+import { asyncCurrentUser } from './store/actions/userAction';
+import { asyncLoadProduct } from './store/actions/productAction';
+import Lenis from '@studio-freight/lenis';
+import Footer from './components/Footer';
 
 const App = () => {
+  const dispatch = useDispatch();
+  const lenisRef = useRef(null);
 
-  const dispatch=useDispatch()
+  useEffect(() => {
+    dispatch(asyncCurrentUser());
+    dispatch(asyncLoadProduct());
 
-useEffect(()=>{
-dispatch(asyncCurrentUser())
-},[])
+    const lenis = new Lenis({
+      smooth: true,
+      smoothTouch: true,
+      gestureOrientation: 'vertical',
+      normalizeWheel: true,
+    });
+
+    lenisRef.current = lenis;
+
+    const raf = (time) => {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    };
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      // optional: lenis.destroy() if needed
+    };
+  }, []);
 
   return (
-    <div className='bg-gradient-to-br from-[#f3a8b5] via-[#b490d4] to-[#6e8bdf] p-[2rem] w-sceen h-screen'>
+    <div className='bg-[#F6F6F6] p-[2rem]  w-screen h-fit'>
       <Navbar />
       <Mainroutes />
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
